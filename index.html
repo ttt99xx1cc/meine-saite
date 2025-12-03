@@ -1,118 +1,68 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>С Днём Рождения, Катя!</title>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днем Рождения, Катя!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+            color: #fff;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            background-size: cover;
+            animation: gradient 10s ease infinite;
+        }
 
-    body {
-        margin: 0;
-        font-family: 'Comic Neue', cursive;
-        background: #ffe6f0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        text-align: center;
-        color: #ff4da6;
-    }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    h1 {
-        font-size: 3em;
-        margin: 20px 0;
-        text-shadow: 2px 2px #fff;
-    }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 0.2em;
+        }
 
-    .slider {
-        width: 80%;
-        max-width: 600px;
-        position: relative;
-        margin: 20px auto;
-        border: 5px solid #ffb6c1;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 0 20px #ff99cc;
-    }
+        h2 {
+            font-size: 2em;
+            margin-top: 0;
+        }
 
-    .slides {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-    }
+        p {
+            font-size: 1.2em;
+        }
 
-    .slides img {
-        width: 100%;
-        border-radius: 20px;
-    }
+        .cake {
+            font-size: 5em;
+            animation: bounce 1s infinite alternate;
+        }
 
-    .buttons {
-        margin-top: 10px;
-    }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
 
-    button {
-        background: #ff99cc;
-        border: none;
-        padding: 10px 20px;
-        margin: 5px;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: bold;
-        color: #fff;
-        transition: 0.3s;
-    }
-
-    button:hover {
-        background: #ff4da6;
-    }
-
-    audio {
-        margin-top: 20px;
-    }
-</style>
+        audio {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+    <h1>С Днем Рождения, Катя! 🎉</h1>
+    <h2>Тебе 16 лет!</h2>
+    <p>Желаем счастья, любви и исполнения всех мечт!</p>
+    <div class="cake">🎂</div>
 
-<h1>С 16-летием, Катя! 🎉</h1>
-
-<div class="slider">
-    <div class="slides">
-        <img src="https://i.imgur.com/mZ0ax3a.jpg" alt="Фото 1">
-        <img src="https://i.imgur.com/8Bo3ZP4.jpg" alt="Фото 2">
-        <img src="https://i.imgur.com/IrSGGqN.jpg" alt="Фото 3">
-    </div>
-</div>
-
-<div class="buttons">
-    <button onclick="prevSlide()">◀️ Назад</button>
-    <button onclick="nextSlide()">Вперёд ▶️</button>
-</div>
-
-<audio controls autoplay loop>
-    <source src="https://drive.google.com/uc?export=download&id=1CMGiYkmpBaLilwUlAxWmaKwhvZihQV12" type="audio/mpeg">
-    Ваш браузер не поддерживает аудио.
-</audio>
-
-<script>
-let index = 0;
-const slides = document.querySelector('.slides');
-const total = slides.children.length;
-
-function showSlide() {
-    slides.style.transform = `translateX(-${index * 100}%)`;
-}
-
-function nextSlide() {
-    index = (index + 1) % total;
-    showSlide();
-}
-
-function prevSlide() {
-    index = (index - 1 + total) % total;
-    showSlide();
-}
-</script>
-
+    <audio autoplay loop>
+        <source src="https://drive.google.com/uc?export=download&id=1CMGiYkmpBaLilwUlAxWmaKwhvZihQV12" type="audio/mpeg">
+    </audio>
 </body>
 </html>
