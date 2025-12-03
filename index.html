@@ -11,13 +11,13 @@
             padding: 0;
             font-family: 'Arial', sans-serif;
             text-align: center;
-            color: #fff;
+            color: #ff69b4; /* розовый текст */
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-image: url('https://wallpapers.com/images/high/small-cute-pink-hello-kitty-wallpaper-5goj2ui3ix0rh4al.webp'); /* Пример фона Hello Kitty */
+            background-image: url('https://wallpapers.com/images/high/small-cute-pink-hello-kitty-wallpaper-5goj2ui3ix0rh4al.webp'); /* фон Hello Kitty */
             background-size: cover;
             background-position: center;
         }
@@ -41,16 +41,17 @@
             text-shadow: 1px 1px 3px #000;
         }
 
-        /* Анимация торта */
-        .cake {
-            font-size: 4em;
+        /* GIF */
+        .kitty-gif {
+            width: 150px; /* можно изменить размер */
             margin: 0.5em 0;
             animation: bounce 1s infinite alternate;
         }
 
+        /* Анимация прыжка */
         @keyframes bounce {
             from { transform: translateY(0); }
-            to { transform: translateY(-20px); }
+            to { transform: translateY(-15px); }
         }
 
         /* Скрываем стандартные элементы аудио */
@@ -63,7 +64,7 @@
             h1 { font-size: 2em; }
             h2 { font-size: 1.5em; }
             p { font-size: 1em; }
-            .cake { font-size: 3em; }
+            .kitty-gif { width: 120px; }
         }
     </style>
 </head>
@@ -71,7 +72,7 @@
     <h1>С Днем Рождения, Катя! 🎉</h1>
     <h2>Тебе 16 лет!</h2>
     <p>Желаем счастья, любви и исполнения всех мечт!</p>
-    <div class="cake">🎂</div>
+    <img src="https://media.tenor.com/c56mUPIqFyUAAAAi/hello-kitty.gif" alt="Hello Kitty" class="kitty-gif">
 
     <audio autoplay loop>
         <source src="https://drive.google.com/uc?export=download&id=1CMGiYkmpBaLilwUlAxWmaKwhvZihQV12" type="audio/mpeg">
