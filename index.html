@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днём Рождения, Катя! ♡</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ffeaf6, #fff0f8, #ffddf4);
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', cursive;
+            color: #ff69b4;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        h1 {
+            font-size: 62px;
+            margin: 20px 0;
+            text-shadow: 4px 4px 8px rgba(255,105,180,0.4);
+            color: #ff69b4;
+        }
+        h2 {
+            font-size: 48px;
+            color: #ff1493;
+            margin: 10px 0;
+        }
+        .kitty {
+            width: 220px;
+            animation: float 6s ease-in-out infinite;
+        }
+        .hearts {
+            position: absolute;
+            font-size: 30px;
+            animation: fall linear infinite;
+            pointer-events: none;
+            user-select: none;
+        }
+        .cake {
+            font-size: 120px;
+            margin: 30px 0;
+        }
+        .text {
+            font-size: 28px;
+            line-height: 1.8;
+            background: rgba(255,255,255,0.7);
+            padding: 30px;
+            border-radius: 30px;
+            border: 5px solid #ffb6c1;
+            margin: 40px auto;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(255,182,193,0.4);
+        }
+        .bows {
+            position: absolute;
+            font-size: 50px;
+            opacity: 0.8;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        .sparkle {
+            position: absolute;
+            font-size: 30px;
+            animation: sparkle 3s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="bows" style="top:10%;left:10%;">🎀</div>
+    <div class="bows" style="top:15%;right:15%;">🎀</div>
+    <div class="bows" style="bottom:10%;left:20%;">🎀</div>
+    <div class="bows" style="bottom:15%;right:10%;">🎀</div>
+
+    <img src="https://i.pinimg.com/originals/5f/94/36/5f94365c2d6c3e8d4e4e9e9b9e9b9e9b.png" alt="Hello Kitty" class="kitty">
+
+    <h1>С ДНЁМ РОЖДЕНИЯ, КАТЯ! ♡</h1>
+    <h2>Тебе сегодня 16 лет! 💖</h2>
+
+    <div class="cake">🎂🎂🎂</div>
+
+    <div class="text">
+        Дорогая Катенька! 💕<br><br>
+        Сегодня тебе исполняется целых 16 — это такой волшебный возраст! ✨
+        Пусть твоя жизнь будет такой же сладкой, как тортик с клубничкой,
+        такой же нежной, как лепестки роз, и такой же яркой, как радуга после дождя! 🌸🍰🌈<br><br>
+        Желаю тебе oceans любви, тонну счастья, миллион улыбок и чтобы все мечты сбывались по щелчку пальцев! 🪄<br><br>
+        Ты самая замечательная, добрая и красивая девочка на свете! 
+        Пусть этот год будет самым сказочным! 🦄💫<br><br>
+        Люблю тебя бесконечно!!! 🥰
+    </div>
+
+    <h2>Пусть этот день будет самым милым! 🎀✨</h2>
+</div>
+
+<script>
+    // Падающие сердечки
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('hearts');
+        heart.innerText = ['💕','💖','💗','💝','🌸','✨','⭐'][Math.floor(Math.random()*7)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = 4 + Math.random() * 4 + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 8000);
+    }, 300);
+
+    // Искорки вокруг
+    setInterval(() => {
+        const sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.innerText = '✨';
+        sparkle.style.left = Math.random() * 100 + 'vw';
+        sparkle.style.top = Math.random() * 100 + 'vh';
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 3000);
+    }, 500);
+</script>
+
+</body>
+</html>
