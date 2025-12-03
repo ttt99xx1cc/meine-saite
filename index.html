@@ -5,43 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>С Днем Рождения, Катя!</title>
     <style>
+        /* Основные стили */
         body {
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-            color: #fff;
             text-align: center;
+            color: #fff;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            height: 100vh;
+            align-items: center;
+            background-image: url('https://i.ibb.co/0jykM6D/hello-kitty-background.jpg'); /* Пример фона Hello Kitty */
             background-size: cover;
-            animation: gradient 10s ease infinite;
+            background-position: center;
         }
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
+        /* Заголовки */
         h1 {
-            font-size: 3em;
-            margin-bottom: 0.2em;
+            font-size: 2.5em;
+            margin: 0.2em 0;
+            text-shadow: 2px 2px 5px #000;
         }
 
         h2 {
-            font-size: 2em;
-            margin-top: 0;
+            font-size: 1.8em;
+            margin: 0.2em 0;
+            text-shadow: 2px 2px 5px #000;
         }
 
         p {
             font-size: 1.2em;
+            margin: 0.5em 0;
+            text-shadow: 1px 1px 3px #000;
         }
 
+        /* Анимация торта */
         .cake {
-            font-size: 5em;
+            font-size: 4em;
+            margin: 0.5em 0;
             animation: bounce 1s infinite alternate;
         }
 
@@ -50,8 +53,17 @@
             to { transform: translateY(-20px); }
         }
 
+        /* Скрываем стандартные элементы аудио */
         audio {
             display: none;
+        }
+
+        /* Адаптация для маленьких экранов */
+        @media (max-width: 480px) {
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            p { font-size: 1em; }
+            .cake { font-size: 3em; }
         }
     </style>
 </head>
