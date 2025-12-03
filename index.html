@@ -3,136 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>С Днём Рождения, Катя! ♡</title>
+    <title>Катя 16 лет ♡ Hello Kitty Paradise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #ffeaf6, #fff0f8, #ffddf4);
-            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', cursive;
-            color: #ff69b4;
-            overflow-x: hidden;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #ffbee3, #ffb3d9, #ff99cc, #ff80bf);
+            overflow: hidden;
+            font-family: 'Patrick Hand', cursive;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="%23ff69b4" d="M16 2c-3 0-5.5 2-5.5 5s2.5 5 5.5 5 5.5-2 5.5-5-2.5-5-5.5-5zM8 14l4 12h8l4-12z"/></svg>'), auto;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 40px 20px;
+        .sky { position: absolute; width: 100%; height: 100%; pointer-events: none; }
+
+        /* Облака */
+        .cloud {
+            position: absolute;
+            font-size: 80px;
+            opacity: 0.3;
+            animation: drift linear infinite;
         }
+        @keyframes drift {
+            from { transform: translateX(-200px); }
+            to { transform: translateX(calc(100vw + 200px)); }
+        }
+
+        /* Китти на шаре */
+        .kitty-balloon {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: balloon 20s ease-in-out infinite;
+            z-index: 10;
+        }
+        .balloon { font-size: 180px; }
+        .kitty-img { width: 280px; margin-top: -80px; animation: wiggle 3s ease-in-out infinite; }
+
+        @keyframes balloon {
+            0%,100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-80px); }
+        }
+        @keyframes wiggle { 0%,100% { transform: rotate(0); } 50% { transform: rotate(8deg); } }
+
+        /* Заголовок с неоновым свечением */
         h1 {
-            font-size: 62px;
-            margin: 20px 0;
-            text-shadow: 4px 4px 8px rgba(255,105,180,0.4);
-            color: #ff69b4;
+            font-family: 'Kalam', cursive;
+            font-size: 80px;
+            color: #fff;
+            text-shadow: 
+                0 0 20px #ff69b4,
+                0 0 40px #ff1493,
+                0 0 60px #ff69b4;
+            margin-top: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
         }
-        h2 {
-            font-size: 48px;
-            color: #ff1493;
-            margin: 10px 0;
-        }
-        .kitty {
-            width: 220px;
-            animation: float 6s ease-in-out infinite;
-        }
-        .hearts {
-            position: absolute;
-            font-size: 30px;
-            animation: fall linear infinite;
-            pointer-events: none;
-            user-select: none;
-        }
-        .cake {
-            font-size: 120px;
-            margin: 30px 0;
-        }
-        .text {
-            font-size: 28px;
-            line-height: 1.8;
-            background: rgba(255,255,255,0.7);
-            padding: 30px;
-            border-radius: 30px;
-            border: 5px solid #ffb6c1;
+        @keyframes glow { from { text-shadow: 0 0 20px #ff69b4; } to { text-shadow: 0 0 60px #ff1493; } }
+
+        /* 3D-торт */
+        .cake-3d {
+            width: 300px;
+            height: 300px;
             margin: 40px auto;
-            max-width: 700px;
-            box-shadow: 0 10px 30px rgba(255,182,193,0.4);
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCake 20s linear infinite;
         }
-        .bows {
+        .layer {
             position: absolute;
-            font-size: 50px;
-            opacity: 0.8;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(#ff99cc, #ff66aa);
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        @keyframes fall {
-            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
-        .sparkle {
+        .layer1 { bottom: 0; width: 300px; left: -50px; }
+        .layer2 { bottom: 80px; width: 240px; left: -20px; background: linear-gradient(#ffb3e6, #ff99d4); }
+        .layer3 { bottom: 160px; width: 180px; left: 10px; background: linear-gradient(#ffd4e8, #ffccdd); }
+        .candle {
             position: absolute;
-            font-size: 30px;
-            animation: sparkle 3s linear infinite;
-            pointer-events: none;
+            width: 20px;
+            height: 80px;
+            background: #fff;
+            bottom: 240px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px;
+            box-shadow: 0 0 20px #fffa;
         }
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0); }
-            50% { opacity: 1; transform: scale(1); }
+        .flame {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            animation: flicker 0.3s infinite alternate;
         }
+        @keyframes flicker { from { transform: translateX(-50%) scale(1); } to { transform: translateX(-50%) scale(1.3); } }
+        @keyframes rotateCake { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+
+        /* Текст в сердечке */
+        .heart-message {
+            background: rgba(255,255,255,0.9);
+            padding: 40px;
+            border-radius: 50px;
+            max-width: 800px;
+            margin: 40px auto;
+            border: 8px solid #ff69b4;
+            font-size: 28px;
+            color: #d81b60;
+            box-shadow: 0 20px 40px rgba(255,105,180,0.4);
+            position: relative;
+        }
+        .heart-message::before {
+            content: "💖";
+            position: absolute;
+            font-size: 120px;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Конфетти при клике */
+        .confetti { position: absolute; pointer-events: none; z-index: 999; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="bows" style="top:10%;left:10%;">🎀</div>
-    <div class="bows" style="top:15%;right:15%;">🎀</div>
-    <div class="bows" style="bottom:10%;left:20%;">🎀</div>
-    <div class="bows" style="bottom:15%;right:10%;">🎀</div>
-
-    <img src="https://i.pinimg.com/originals/5f/94/36/5f94365c2d6c3e8d4e4e9e9b9e9b9e9b.png" alt="Hello Kitty" class="kitty">
-
-    <h1>С ДНЁМ РОЖДЕНИЯ, КАТЯ! ♡</h1>
-    <h2>Тебе сегодня 16 лет! 💖</h2>
-
-    <div class="cake">🎂🎂🎂</div>
-
-    <div class="text">
-        Дорогая Катенька! 💕<br><br>
-        Сегодня тебе исполняется целых 16 — это такой волшебный возраст! ✨
-        Пусть твоя жизнь будет такой же сладкой, как тортик с клубничкой,
-        такой же нежной, как лепестки роз, и такой же яркой, как радуга после дождя! 🌸🍰🌈<br><br>
-        Желаю тебе oceans любви, тонну счастья, миллион улыбок и чтобы все мечты сбывались по щелчку пальцев! 🪄<br><br>
-        Ты самая замечательная, добрая и красивая девочка на свете! 
-        Пусть этот год будет самым сказочным! 🦄💫<br><br>
-        Люблю тебя бесконечно!!! 🥰
-    </div>
-
-    <h2>Пусть этот день будет самым милым! 🎀✨</h2>
+<div class="sky">
+    <div class="cloud" style="top:10%; animation-duration:120s;">☁️</div>
+    <div class="cloud" style="top:25%; animation-duration:150s; font-size:100px;">☁️☁️</div>
+    <div class="cloud" style="top:40%; animation-duration:100s;">☁️</div>
 </div>
 
-<script>
-    // Падающие сердечки
-    setInterval(() => {
-        const heart = document.createElement('div');
-        heart.classList.add('hearts');
-        heart.innerText = ['💕','💖','💗','💝','🌸','✨','⭐'][Math.floor(Math.random()*7)];
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = 4 + Math.random() * 4 + 's';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 8000);
-    }, 300);
+<div class="kitty-balloon">
+    <div class="balloon">🎈</div>
+    <img src="https://i.pinimg.com/originals/5c/2b/5f/5c2b5f9e9b9e9b9e9b9e9b9e9b9e9b9e.png" class="kitty-img" alt="Hello Kitty">
+</div>
 
-    // Искорки вокруг
-    setInterval(() => {
-        const sparkle = document.createElement('div');
-        sparkle.classList.add('sparkle');
-        sparkle.innerText = '✨';
-        sparkle.style.left = Math.random() * 100 + 'vw';
-        sparkle.style.top = Math.random() * 100 + 'vh';
-        document.body.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 3000);
-    }, 500);
+<h1>Катя, тебе 16!!! ♡</h1>
+
+<div class="cake-3d">
+    <div class="layer layer1"></div>
+    <div class="layer layer2"></div>
+    <div class="layer layer3"></div>
+    <div class="candle"><div class="flame">🔥</div></div>
+</div>
+
+<div class="heart-message">
+    <strong>Дорогая Катюша! 💕</strong><br><br>
+    Сегодня ты становишься настоящей принцессой 16 лет! ✨<br>
+    Пусть каждый твой день будет как этот тортик — многослойным, сладким и с вишенкой наверху! 🍒<br><br>
+    Желаю тебе океан нежности, гору подарков, море улыбок и чтобы все мальчики падали в обморок от твоей красоты! 😍<br><br>
+    Ты — самая милая, добрая и волшебная девочка на всей планете! 🌸<br><br>
+    <em>С любовью и миллионом обнимашек,<br>Hello Kitty и я ♡</em>
+</div>
+
+<!-- Музыка (включается по клику) -->
+<audio id="music" loop>
+    <source src="https://files.catbox.moe/2x0g0q.mp3" type="audio/mp3">
+</audio>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script>
+// Конфетти при клике
+document.body.addEventListener('click', function(e) {
+    confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight },
+        colors: ['#ff69b4', '#ffb6c1', '#ff99cc', '#ffd4e8', '#ffffff']
+    });
+});
+
+// Музыка по первому клику (обходит автоблокировку)
+let played = false;
+document.body.addEventListener('click', () => {
+    if (!played) {
+        document.getElementById('music').play();
+        played = true;
+    }
+});
+
+// Падающие бантики и звёздочки
+setInterval(() => {
+    const item = document.createElement('div');
+    item.style.position = 'absolute';
+    item.style.left = Math.random() * 100 + 'vw';
+    item.style.fontSize = '30px';
+    item.innerText = ['🎀','✨','🌸','💫','⭐','💖'][Math.floor(Math.random()*6)];
+    item.style.animation = 'fall 8s linear forwards';
+    item.style.zIndex = '5';
+    document.body.appendChild(item);
+    setTimeout(() => item.remove(), 8000);
+}, 600);
+
+const style = document.createElement('style');
+style.innerHTML = `@keyframes fall { from { transform: translateY(-100px); } to { transform: translateY(100vh) rotate(360deg); } }`;
+document.head.appendChild(style);
 </script>
 
 </body>
+</html>
 </html>
