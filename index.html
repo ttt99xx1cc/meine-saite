@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ink downloader</title>
+  <title>ink downloader PRO</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400&display=swap');
 
@@ -90,6 +90,9 @@
       min-height: 30px;
     }
 
+    .error { color: #ff6666; }
+    .success { color: #66ff66; }
+
     footer {
       text-align: center;
       padding: 30px 0;
@@ -111,8 +114,8 @@
 <body>
 
   <div class="container">
-    <h1>ink downloader</h1>
-    <p>Spotify • SoundCloud • YouTube • Deezer<br>Вставь любую ссылку — получи MP3 320 kbps</p>
+    <h1>ink downloader PRO</h1>
+    <p>Spotify • SoundCloud • YouTube • Deezer<br>Авто-переключение серверов, если заняты</p>
 
     <input type="text" id="urlInput" placeholder="https://open.spotify.com/track/... или https://soundcloud.com/..." />
     <button onclick="downloadNow()">СКАЧАТЬ СЕЙЧАС</button>
@@ -129,41 +132,53 @@
       const status = document.getElementById('status');
 
       if (!url) {
-        status.innerHTML = 'Вставь ссылку, бро!';
+        status.innerHTML = '<span class="error">Вставь ссылку!</span>';
         return;
       }
 
-      status.innerHTML = 'Поиск трека...';
+      status.innerHTML = 'Проверяем серверы...';
 
-      // Бесплатные публичные прокси spotDL (работают на декабрь 2025)
+      // Новые бэкенды (декабрь 2025): spotidown, savify, spotiflyer + старые + yt-dlp fallback
       const backends = [
-        'https://spotdl.chirag.sh/download',           // основной
-        'https://spotdl-proxy.vercel.app/api/download',
-        'https://spotdl.inkv1zator.workers.dev/download',
-        'https://spotdl.deno.dev/download'
+        // Spotidown Proxy (Spotify-focused)
+        { url: 'https://api.spotidown-proxy.vercel.app/api/download', type: 'POST', body: { trackId: extractId(url) } },
+        // Savify public demo
+        { url: 'https://savify-proxy.fly.dev/download', type: 'POST', body: { url: url } },
+        // SpotiFlyer API (free tier)
+        { url: `https://api.spotiflyer.workers.dev/download?url=${encodeURIComponent(url)}`, type: 'GET' },
+        // Старые spotDL
+        { url: 'https://spotdl.chirag.sh/download', type: 'POST', body: { url: url } },
+        { url: 'https://spotdl-proxy.vercel.app/api/download', type: 'POST', body: { url: url } },
+        // yt-dlp fallback via public proxy
+        { url: `https://yt-dlp-proxy.glitch.me/download?url=${encodeURIComponent(url)}`, type: 'GET' }
       ];
 
       let success = false;
 
       for (let backend of backends) {
         try {
-          const response = await fetch(backend, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: url })
-          });
+          status.innerHTML = `Пробуем ${backend.url.includes('spotidown') ? 'Spotidown' : backend.url.includes('savify') ? 'Savify' : backend.url.includes('spotiflyer') ? 'SpotiFlyer' : backend.url.includes('yt-dlp') ? 'yt-dlp' : 'spotDL'}...`;
+          
+          const options = {
+            method: backend.type,
+            headers: { 'Content-Type': 'application/json' }
+          };
+          if (backend.type === 'POST') options.body = JSON.stringify(backend.body);
 
-          if (!response.ok) throw new Error('Сервер занят');
+          const response = await fetch(backend.url, options);
+
+          if (!response.ok) throw new Error('Не ответил');
 
           const blob = await response.blob();
+          if (blob.size === 0) throw new Error('Пустой файл');
+
           const downloadUrl = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.style.display = 'none';
           a.href = downloadUrl;
 
-          // Имя файла из заголовка или по треку
-          const filename = response.headers.get('content-disposition')?.match(/filename="?(.+)"?/)?.[1] || 
-                          'track_by_inkv1zator.mp3';
+          const contentDisp = response.headers.get('content-disposition');
+          const filename = contentDisp?.match(/filename="?(.+)"?/)?.[1] || `track_${Date.now()}.mp3`;
           a.download = filename;
 
           document.body.appendChild(a);
@@ -171,20 +186,33 @@
           window.URL.revokeObjectURL(downloadUrl);
           document.body.removeChild(a);
 
-          status.innerHTML = 'Скачано! ❤️';
+          status.innerHTML = `<span class="success">Скачано через ${backend.url.includes('spotidown') ? 'Spotidown' : backend.url.includes('savify') ? 'Savify' : backend.url.includes('spotiflyer') ? 'SpotiFlyer' : backend.url.includes('yt-dlp') ? 'yt-dlp' : 'spotDL'}! ❤️</span>`;
           success = true;
           setTimeout(() => status.innerHTML = '', 5000);
           break;
 
         } catch (e) {
-          console.log(`Backend ${backend} не ответил, пробуем следующий...`);
-          status.innerHTML = 'Пробуем другой сервер...';
+          console.log(`Backend ${backend.url} упал: ${e.message}`);
         }
       }
 
       if (!success) {
-        status.innerHTML = 'Все сервера заняты<br>Попробуй через минуту или напиши @inkv1zator — подниму свой';
+        // Fallback: Создаём yt-dlp ссылку для ручного скачивания
+        const fallbackUrl = `https://youtube.com/results?search_query=${encodeURIComponent(extractQuery(url))}`;
+        status.innerHTML = `<span class="error">Все сервера заняты! 😔<br>Попробуй через 5 мин или скачай вручную: <a href="${fallbackUrl}" target="_blank" style="color: #ffcc00;">Поиск в YouTube</a><br>Или напиши @inkv1zator — подниму приватный сервер.</span>`;
       }
+    }
+
+    function extractId(url) {
+      // Извлекаем ID трека для spotidown
+      return url.split('/').pop().split('?')[0];
+    }
+
+    function extractQuery(url) {
+      // Для fallback: извлекаем название/артиста из URL (упрощённо)
+      if (url.includes('spotify.com/track/')) return 'spotify track ' + extractId(url);
+      if (url.includes('soundcloud.com/')) return url.split('/').slice(-2).join(' ');
+      return 'music ' + url.split('/').pop();
     }
 
     // Enter = скачать
