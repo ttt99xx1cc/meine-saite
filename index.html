@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ink downloader v6</title>
+  <title>ink downloader v7</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300&display=swap');
 
@@ -46,8 +46,8 @@
 <body>
 
   <div class="c">
-    <h1>ink downloader v6</h1>
-    <p>Spotify • SoundCloud<br>Новый API — всегда MP3-файл, без сбоев</p>
+    <h1>ink downloader v7</h1>
+    <p>Spotify • SoundCloud<br>Улучшенный fallback — качает через YouTube, без молчания</p>
 
     <input type="text" id="url" placeholder="https://open.spotify.com/track/... или https://soundcloud.com/..." />
     <button onclick="go()">СКАЧАТЬ ФАЙЛОМ</button>
@@ -68,13 +68,17 @@
 
       let apiUrl = '';
       let trackId = '';
+      let query = '';
 
       if (url.includes('spotify.com/track/')) {
         trackId = url.split('/track/')[1].split('?')[0];
-        apiUrl = `https://spotifydown-api.vercel.app/download/${trackId}`;
+        // Новый API: spotiflyer-public (отдаёт MP3 напрямую)
+        apiUrl = `https://api.spotiflyer.workers.dev/download/${trackId}`;
+        query = `spotify ${trackId}`; // Для fallback
       } else if (url.includes('soundcloud.com/')) {
         trackId = url.split('/').pop().split('?')[0];
         apiUrl = `https://api.soundcloud.com/tracks/${trackId}/stream?client_id=IiZ62aLI9y0m8QvO2nF5zQ`;
+        query = url.split('/').slice(-2).join(' '); // Название для YT
       } else {
         s.innerHTML = 'Только Spotify и SoundCloud!';
         return;
@@ -91,25 +95,41 @@
         const a = document.createElement('a');
         a.href = dl;
         a.download = r.headers.get('content-disposition')?.match(/filename="?(.+)"?/)?.[1] || `track_${trackId}.mp3`;
+        document.body.appendChild(a);
         a.click();
-
+        document.body.removeChild(a);
         window.URL.revokeObjectURL(dl);
         s.innerHTML = 'Скачано! ❤️';
         setTimeout(() => s.innerHTML = '', 4000);
 
       } catch (e) {
-        // Fallback на yt-dlp прокси (всегда работает)
-        s.innerHTML = 'Пробуем fallback...';
-        const fallback = `https://yt-dlp-proxy.glitch.me/download?url=${encodeURIComponent(url)}`;
-        const fr = await fetch(fallback);
-        const fb = await fr.blob();
-        const fdl = window.URL.createObjectURL(fb);
-        const fa = document.createElement('a');
-        fa.href = fdl;
-        fa.download = `track_fallback_${Date.now()}.mp3`;
-        fa.click();
-        window.URL.revokeObjectURL(fdl);
-        s.innerHTML = 'Скачано через fallback! ❤️';
+        // Новый fallback: Поиск в YT + y2mate API (отдаёт MP3)
+        s.innerHTML = 'Пробуем через YouTube...';
+        const ytSearch = `https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' full song')}`;
+        const y2mateApi = `https://www.y2mate.com/mates/analyze/ajax?url=${encodeURIComponent(ytSearch)}&q=${encodeURIComponent(query)}&ftype=mp3_320&fquality=320`;
+
+        try {
+          const yr = await fetch(y2mateApi);
+          const ydata = await yr.json();
+          if (ydata.status === 'success' && ydata.links?.mp3) {
+            const finalUrl = ydata.links.mp3[0].dlink || ydata.links.mp3;
+            const fr = await fetch(finalUrl);
+            const fb = await fr.blob();
+            const fdl = window.URL.createObjectURL(fb);
+            const fa = document.createElement('a');
+            fa.href = fdl;
+            fa.download = `${query.replace(/[^a-z0-9]/gi, '_')}.mp3`;
+            document.body.appendChild(fa);
+            fa.click();
+            document.body.removeChild(fa);
+            window.URL.revokeObjectURL(fdl);
+            s.innerHTML = 'Скачано через YouTube! ❤️';
+          } else {
+            throw new Error('Не найден в YT');
+          }
+        } catch (fe) {
+          s.innerHTML = 'Ошибка: попробуй публичный трек или другую ссылку<br>Напиши @inkv1zator для приватного API';
+        }
       }
     }
 
