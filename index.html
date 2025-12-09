@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ink downloader v7</title>
+  <title>ink downloader v8</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300&display=swap');
 
@@ -32,10 +32,12 @@
     button { padding: 18px 40px; font-size: 1.2rem; font-weight: bold;
              background: linear-gradient(45deg, #ff006e, #ff3399); color: white; border: none;
              border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(255,0,110,0.5);
-             transition: all 0.3s; }
+             transition: all 0.3s; margin: 5px; }
     button:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(255,0,110,0.7); }
 
     #status { margin-top: 25px; font-size: 1rem; min-height: 30px; }
+
+    .alt { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; margin-top: 20px; display: none; }
 
     footer { text-align: center; padding: 30px 0; font-size: 1.1rem; }
     footer a { color: #ff3399; text-decoration: none; font-weight: bold; }
@@ -46,12 +48,17 @@
 <body>
 
   <div class="c">
-    <h1>ink downloader v7</h1>
-    <p>Spotify • SoundCloud<br>Улучшенный fallback — качает через YouTube, без молчания</p>
+    <h1>ink downloader v8</h1>
+    <p>Spotify • SoundCloud<br>Для приватных треков — сделай их публичными или используй Premium</p>
 
     <input type="text" id="url" placeholder="https://open.spotify.com/track/... или https://soundcloud.com/..." />
     <button onclick="go()">СКАЧАТЬ ФАЙЛОМ</button>
     <div id="status"></div>
+    <div class="alt" id="alt">
+      <p>Приватный трек? Попробуй:</p>
+      <button onclick="openOnline()">Открыть в KlickAud</button>
+      <button onclick="installSpotDL()">Установить spotDL (локально)</button>
+    </div>
   </div>
 
   <footer>
@@ -59,78 +66,117 @@
   </footer>
 
   <script>
+    const SC_CLIENT_ID = '2t9loNQH90kzJcsFCODdigxfp325aq4z'; // Свежий на 2025
+
     async function go() {
       const url = document.getElementById('url').value.trim();
       const s = document.getElementById('status');
+      const alt = document.getElementById('alt');
       if (!url) { s.innerHTML = 'Вставь ссылку!'; return; }
 
       s.innerHTML = 'Ищем трек...';
+      alt.style.display = 'none';
 
-      let apiUrl = '';
       let trackId = '';
+      let title = '';
+      let artist = '';
       let query = '';
 
       if (url.includes('spotify.com/track/')) {
         trackId = url.split('/track/')[1].split('?')[0];
-        // Новый API: spotiflyer-public (отдаёт MP3 напрямую)
-        apiUrl = `https://api.spotiflyer.workers.dev/download/${trackId}`;
-        query = `spotify ${trackId}`; // Для fallback
+        try {
+          // Получаем метаданные бесплатно (публичный API Spotify)
+          const meta = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`);
+          const data = await meta.json();
+          if (data.error) throw new Error('private');
+          title = data.name;
+          artist = data.artists[0].name;
+          query = `${title} ${artist} full song`;
+        } catch (e) {
+          if (e.message === 'private') {
+            s.innerHTML = 'Приватный трек!';
+            alt.style.display = 'block';
+            return;
+          }
+        }
+        // Основной API (spotiflyer)
+        const apiUrl = `https://api.spotiflyer.workers.dev/download/${trackId}`;
+        // ... (остальной код для fetch blob как раньше)
+        try {
+          const r = await fetch(apiUrl);
+          if (!r.ok) throw new Error('Не отвечает');
+          const blob = await r.blob();
+          if (blob.size < 10000) throw new Error('Не найден');
+          downloadBlob(blob, `${title} - ${artist}.mp3`);
+          s.innerHTML = 'Скачано! ❤️';
+          return;
+        } catch (e) {
+          s.innerHTML = 'Пробуем YouTube...';
+        }
       } else if (url.includes('soundcloud.com/')) {
         trackId = url.split('/').pop().split('?')[0];
-        apiUrl = `https://api.soundcloud.com/tracks/${trackId}/stream?client_id=IiZ62aLI9y0m8QvO2nF5zQ`;
-        query = url.split('/').slice(-2).join(' '); // Название для YT
+        const apiUrl = `https://api.soundcloud.com/tracks/${trackId}/stream?client_id=${SC_CLIENT_ID}`;
+        try {
+          const r = await fetch(apiUrl);
+          if (!r.ok) throw new Error('Не найден');
+          const blob = await r.blob();
+          if (blob.size < 10000) throw new Error('Не найден');
+          downloadBlob(blob, `soundcloud_${trackId}.mp3`);
+          s.innerHTML = 'Скачано! ❤️';
+          return;
+        } catch (e) {
+          s.innerHTML = 'Пробуем YouTube...';
+          query = url.split('/').slice(-2).join(' ') + ' full track';
+        }
       } else {
         s.innerHTML = 'Только Spotify и SoundCloud!';
         return;
       }
 
+      // Fallback YouTube + y2mate (обновлённый endpoint 2025)
+      const ytSearch = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+      const y2mateUrl = `https://eu1.y2mate.is/ajax?k_query=${encodeURIComponent(query)}&k_page=1&hl=en&q_no1=mp3`;
       try {
-        const r = await fetch(apiUrl);
-        if (!r.ok) throw new Error('Не отвечает');
-
-        const blob = await r.blob();
-        if (blob.size < 10000) throw new Error('Трек не найден');
-
-        const dl = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = dl;
-        a.download = r.headers.get('content-disposition')?.match(/filename="?(.+)"?/)?.[1] || `track_${trackId}.mp3`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(dl);
-        s.innerHTML = 'Скачано! ❤️';
-        setTimeout(() => s.innerHTML = '', 4000);
-
-      } catch (e) {
-        // Новый fallback: Поиск в YT + y2mate API (отдаёт MP3)
-        s.innerHTML = 'Пробуем через YouTube...';
-        const ytSearch = `https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' full song')}`;
-        const y2mateApi = `https://www.y2mate.com/mates/analyze/ajax?url=${encodeURIComponent(ytSearch)}&q=${encodeURIComponent(query)}&ftype=mp3_320&fquality=320`;
-
-        try {
-          const yr = await fetch(y2mateApi);
-          const ydata = await yr.json();
-          if (ydata.status === 'success' && ydata.links?.mp3) {
-            const finalUrl = ydata.links.mp3[0].dlink || ydata.links.mp3;
-            const fr = await fetch(finalUrl);
+        const yr = await fetch(y2mateUrl);
+        const ydata = await yr.json();
+        if (ydata.result && ydata.result.vid) {
+          const vid = ydata.result.vid;
+          const dlUrl = `https://eu1.y2mate.is/convertv2/index?type=youtube&file=${vid}&f=mp3128`;
+          const dr = await fetch(dlUrl);
+          const ddata = await dr.json();
+          if (ddata.dlink) {
+            const fr = await fetch(ddata.dlink);
             const fb = await fr.blob();
-            const fdl = window.URL.createObjectURL(fb);
-            const fa = document.createElement('a');
-            fa.href = fdl;
-            fa.download = `${query.replace(/[^a-z0-9]/gi, '_')}.mp3`;
-            document.body.appendChild(fa);
-            fa.click();
-            document.body.removeChild(fa);
-            window.URL.revokeObjectURL(fdl);
+            downloadBlob(fb, `${query.replace(/[^a-z0-9]/gi, '_')}.mp3`);
             s.innerHTML = 'Скачано через YouTube! ❤️';
-          } else {
-            throw new Error('Не найден в YT');
+            return;
           }
-        } catch (fe) {
-          s.innerHTML = 'Ошибка: попробуй публичный трек или другую ссылку<br>Напиши @inkv1zator для приватного API';
         }
+        throw new Error('Не найден в YT');
+      } catch (fe) {
+        s.innerHTML = 'Приватный или редкий трек — попробуй публичный!';
+        alt.style.display = 'block';
       }
+    }
+
+    function downloadBlob(blob, filename) {
+      const dl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = dl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(dl);
+    }
+
+    function openOnline() {
+      const url = document.getElementById('url').value;
+      window.open(`https://klickaud.org/en?url=${encodeURIComponent(url)}`, '_blank');
+    }
+
+    function installSpotDL() {
+      window.open('https://github.com/spotDL/spotify-downloader', '_blank');
     }
 
     document.getElementById('url').addEventListener('keypress', e => { if (e.key === 'Enter') go(); });
