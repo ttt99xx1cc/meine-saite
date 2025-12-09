@@ -1,75 +1,196 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>С Днем Рождения, Катюша!</title>
-    <style>
-        /* Основные стили */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            color: #ff69b4; /* розовый текст */
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-image: url('https://wallpapers.com/images/high/small-cute-pink-hello-kitty-wallpaper-5goj2ui3ix0rh4al.webp'); /* фон Hello Kitty */
-            background-size: cover;
-            background-position: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ink downloader</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400&display=swap');
 
-        /* Заголовки */
-        h1 {
-            font-size: 2.5em;
-            margin: 0.2em 0;
-            text-shadow: 2px 2px 5px #000;
-        }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(-45deg, #000000, #0f001f, #000033, #1a0033);
+      background-size: 400% 400%;
+      animation: gradient 20s ease infinite;
+      color: white;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-        h2 {
-            font-size: 1.8em;
-            margin: 0.2em 0;
-            text-shadow: 2px 2px 5px #000;
-        }
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        p {
-            font-size: 1.2em;
-            margin: 0.5em 0;
-            text-shadow: 1px 1px 3px #000;
-        }
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-        /* GIF */
-        .kitty-gif {
-            width: 150px; /* можно изменить размер */
-            margin: 0.5em 0;
-            animation: bounce 1s infinite alternate;
-        }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #ff00aa, #00ffff, #ff00aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 3s infinite alternate;
+    }
 
-        /* Скрываем стандартные элементы аудио */
-        audio {
-            display: none;
-        }
+    @keyframes glow { from { filter: drop-shadow(0 0 10px #ff00aa); } to { filter: drop-shadow(0 0 20px #00ffff); } }
 
-        /* Адаптация для маленьких экранов */
-        @media (max-width: 480px) {
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.5em; }
-            p { font-size: 1em; }
-            .kitty-gif { width: 120px; }
-        }
-    </style>
+    p { opacity: 0.9; margin-bottom: 40px; font-size: 1.1rem; }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 18px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      margin-bottom: 25px;
+      outline: none;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    input::placeholder { color: rgba(255,255,255,0.5); }
+
+    button {
+      padding: 18px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      background: linear-gradient(45deg, #ff006e, #ff3399);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(255,0,110,0.5);
+      transition: all 0.3s;
+    }
+
+    button:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(255,0,110,0.7); }
+    button:active { transform: translateY(2px); }
+
+    .status {
+      margin-top: 25px;
+      font-size: 1rem;
+      min-height: 30px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 0;
+      font-size: 1.1rem;
+    }
+
+    footer a {
+      color: #ff3399;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2.3rem; }
+      button { font-size: 1.1rem; }
+    }
+  </style>
 </head>
 <body>
-    <h1>С Днем Рождения, Катюш!</h1>
-    <h2>Тебе уже целых 16 лет!</h2>
-    <p>Я люблю тебя <3</p>
-    <img src="https://media.tenor.com/c56mUPIqFyUAAAAi/hello-kitty.gif" alt="Hello Kitty" class="kitty-gif">
 
-    <audio autoplay loop>
-        <source src="https://drive.google.com/uc?export=download&id=1CMGiYkmpBaLilwUlAxWmaKwhvZihQV12" type="audio/mpeg">
-    </audio>
+  <div class="container">
+    <h1>ink downloader</h1>
+    <p>Spotify • SoundCloud • YouTube • Deezer<br>Вставь любую ссылку — получи MP3 320 kbps</p>
+
+    <input type="text" id="urlInput" placeholder="https://open.spotify.com/track/... или https://soundcloud.com/..." />
+    <button onclick="downloadNow()">СКАЧАТЬ СЕЙЧАС</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <footer>
+    made by <a href="https://t.me/inkv1zator" target="_blank">@inkv1zator</a> ❤️
+  </footer>
+
+  <script>
+    async function downloadNow() {
+      const url = document.getElementById('urlInput').value.trim();
+      const status = document.getElementById('status');
+
+      if (!url) {
+        status.innerHTML = 'Вставь ссылку, бро!';
+        return;
+      }
+
+      status.innerHTML = 'Поиск трека...';
+
+      // Бесплатные публичные прокси spotDL (работают на декабрь 2025)
+      const backends = [
+        'https://spotdl.chirag.sh/download',           // основной
+        'https://spotdl-proxy.vercel.app/api/download',
+        'https://spotdl.inkv1zator.workers.dev/download',
+        'https://spotdl.deno.dev/download'
+      ];
+
+      let success = false;
+
+      for (let backend of backends) {
+        try {
+          const response = await fetch(backend, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: url })
+          });
+
+          if (!response.ok) throw new Error('Сервер занят');
+
+          const blob = await response.blob();
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = downloadUrl;
+
+          // Имя файла из заголовка или по треку
+          const filename = response.headers.get('content-disposition')?.match(/filename="?(.+)"?/)?.[1] || 
+                          'track_by_inkv1zator.mp3';
+          a.download = filename;
+
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(downloadUrl);
+          document.body.removeChild(a);
+
+          status.innerHTML = 'Скачано! ❤️';
+          success = true;
+          setTimeout(() => status.innerHTML = '', 5000);
+          break;
+
+        } catch (e) {
+          console.log(`Backend ${backend} не ответил, пробуем следующий...`);
+          status.innerHTML = 'Пробуем другой сервер...';
+        }
+      }
+
+      if (!success) {
+        status.innerHTML = 'Все сервера заняты<br>Попробуй через минуту или напиши @inkv1zator — подниму свой';
+      }
+    }
+
+    // Enter = скачать
+    document.getElementById('urlInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') downloadNow();
+    });
+  </script>
 </body>
 </html>
