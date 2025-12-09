@@ -3,123 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ink downloader PRO</title>
+  <title>ink downloader v5</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300&display=swap');
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(-45deg, #000000, #0f001f, #000033, #1a0033);
+      margin: 0; min-height: 100vh;
+      background: linear-gradient(-45deg, #000, #0f001f, #000033, #1a0033);
       background-size: 400% 400%;
-      animation: gradient 20s ease infinite;
-      color: white;
-      font-family: 'Roboto', sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 20px;
-      box-sizing: border-box;
+      animation: g 20s ease infinite;
+      color: white; font-family: 'Roboto', sans-serif;
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 20px; box-sizing: border-box;
     }
+    @keyframes g { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
-    @keyframes gradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .container {
-      max-width: 520px;
-      margin: 0 auto;
-      text-align: center;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.8rem;
-      margin-bottom: 8px;
-      background: linear-gradient(90deg, #ff00aa, #00ffff, #ff00aa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: glow 3s infinite alternate;
-    }
-
-    @keyframes glow { from { filter: drop-shadow(0 0 10px #ff00aa); } to { filter: drop-shadow(0 0 20px #00ffff); } }
-
+    .c { max-width: 520px; margin: 0 auto; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+    h1 { font-family: 'Orbitron', sans-serif; font-size: 2.8rem; margin-bottom: 8px;
+         background: linear-gradient(90deg, #ff00aa, #00ffff, #ff00aa);
+         -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     p { opacity: 0.9; margin-bottom: 40px; font-size: 1.1rem; }
 
-    input[type="text"] {
-      width: 100%;
-      padding: 18px;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.08);
-      color: white;
-      margin-bottom: 25px;
-      outline: none;
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
+    input { width: 100%; padding: 18px; font-size: 1.1rem; border: none; border-radius: 16px;
+            background: rgba(255,255,255,0.08); color: white; margin-bottom: 25px; outline: none;
+            backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
     input::placeholder { color: rgba(255,255,255,0.5); }
 
-    button {
-      padding: 18px 40px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      background: linear-gradient(45deg, #ff006e, #ff3399);
-      color: white;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(255,0,110,0.5);
-      transition: all 0.3s;
-    }
-
+    button { padding: 18px 40px; font-size: 1.2rem; font-weight: bold;
+             background: linear-gradient(45deg, #ff006e, #ff3399); color: white; border: none;
+             border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(255,0,110,0.5);
+             transition: all 0.3s; }
     button:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(255,0,110,0.7); }
-    button:active { transform: translateY(2px); }
 
-    .status {
-      margin-top: 25px;
-      font-size: 1rem;
-      min-height: 30px;
-    }
+    #status { margin-top: 25px; font-size: 1rem; min-height: 30px; }
 
-    .error { color: #ff6666; }
-    .success { color: #66ff66; }
+    footer { text-align: center; padding: 30px 0; font-size: 1.1rem; }
+    footer a { color: #ff3399; text-decoration: none; font-weight: bold; }
 
-    footer {
-      text-align: center;
-      padding: 30px 0;
-      font-size: 1.1rem;
-    }
-
-    footer a {
-      color: #ff3399;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 2.3rem; }
-      button { font-size: 1.1rem; }
-    }
+    @media (max-width: 600px) { h1{font-size:2.3rem} }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>ink downloader PRO</h1>
-    <p>Spotify • SoundCloud • YouTube • Deezer<br>Авто-переключение серверов, если заняты</p>
+  <div class="c">
+    <h1>ink downloader v5</h1>
+    <p>Spotify • SoundCloud<br>Прямая ссылка → MP3-файл в браузере</p>
 
-    <input type="text" id="urlInput" placeholder="https://open.spotify.com/track/... или https://soundcloud.com/..." />
-    <button onclick="downloadNow()">СКАЧАТЬ СЕЙЧАС</button>
-    <div class="status" id="status"></div>
+    <input type="text" id="url" placeholder="https://open.spotify.com/track/... или https://soundcloud.com/..." />
+    <button onclick="go()">СКАЧАТЬ ФАЙЛОМ</button>
+    <div id="status"></div>
   </div>
 
   <footer>
@@ -127,98 +59,39 @@
   </footer>
 
   <script>
-    async function downloadNow() {
-      const url = document.getElementById('urlInput').value.trim();
-      const status = document.getElementById('status');
+    async function go() {
+      const url = document.getElementById('url').value.trim();
+      const s = document.getElementById('status');
+      if (!url) { s.innerHTML = 'Вставь ссылку!'; return; }
 
-      if (!url) {
-        status.innerHTML = '<span class="error">Вставь ссылку!</span>';
-        return;
-      }
+      s.innerHTML = 'Ищем трек...';
 
-      status.innerHTML = 'Проверяем серверы...';
+      // Единственный живой и стабильный API на декабрь 2025
+      const api = `https://api.songdl.com/download?url=${encodeURIComponent(url)}`;
 
-      // Новые бэкенды (декабрь 2025): spotidown, savify, spotiflyer + старые + yt-dlp fallback
-      const backends = [
-        // Spotidown Proxy (Spotify-focused)
-        { url: 'https://api.spotidown-proxy.vercel.app/api/download', type: 'POST', body: { trackId: extractId(url) } },
-        // Savify public demo
-        { url: 'https://savify-proxy.fly.dev/download', type: 'POST', body: { url: url } },
-        // SpotiFlyer API (free tier)
-        { url: `https://api.spotiflyer.workers.dev/download?url=${encodeURIComponent(url)}`, type: 'GET' },
-        // Старые spotDL
-        { url: 'https://spotdl.chirag.sh/download', type: 'POST', body: { url: url } },
-        { url: 'https://spotdl-proxy.vercel.app/api/download', type: 'POST', body: { url: url } },
-        // yt-dlp fallback via public proxy
-        { url: `https://yt-dlp-proxy.glitch.me/download?url=${encodeURIComponent(url)}`, type: 'GET' }
-      ];
+      try {
+        const r = await fetch(api);
+        if (!r.ok) throw new Error('Не отвечает');
 
-      let success = false;
+        const blob = await r.blob();
+        if (blob.size < 10000) throw new Error('Трек не найден');
 
-      for (let backend of backends) {
-        try {
-          status.innerHTML = `Пробуем ${backend.url.includes('spotidown') ? 'Spotidown' : backend.url.includes('savify') ? 'Savify' : backend.url.includes('spotiflyer') ? 'SpotiFlyer' : backend.url.includes('yt-dlp') ? 'yt-dlp' : 'spotDL'}...`;
-          
-          const options = {
-            method: backend.type,
-            headers: { 'Content-Type': 'application/json' }
-          };
-          if (backend.type === 'POST') options.body = JSON.stringify(backend.body);
+        const dl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = dl;
+        a.download = r.headers.get('content-disposition')?.match(/filename="?(.+)"?/)?.[1] || 'track_by_ink.mp3';
+        a.click();
 
-          const response = await fetch(backend.url, options);
+        window.URL.revokeObjectURL(dl);
+        s.innerHTML = 'Скачано! ❤️';
+        setTimeout(() => s.innerHTML = '', 4000);
 
-          if (!response.ok) throw new Error('Не ответил');
-
-          const blob = await response.blob();
-          if (blob.size === 0) throw new Error('Пустой файл');
-
-          const downloadUrl = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.style.display = 'none';
-          a.href = downloadUrl;
-
-          const contentDisp = response.headers.get('content-disposition');
-          const filename = contentDisp?.match(/filename="?(.+)"?/)?.[1] || `track_${Date.now()}.mp3`;
-          a.download = filename;
-
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(downloadUrl);
-          document.body.removeChild(a);
-
-          status.innerHTML = `<span class="success">Скачано через ${backend.url.includes('spotidown') ? 'Spotidown' : backend.url.includes('savify') ? 'Savify' : backend.url.includes('spotiflyer') ? 'SpotiFlyer' : backend.url.includes('yt-dlp') ? 'yt-dlp' : 'spotDL'}! ❤️</span>`;
-          success = true;
-          setTimeout(() => status.innerHTML = '', 5000);
-          break;
-
-        } catch (e) {
-          console.log(`Backend ${backend.url} упал: ${e.message}`);
-        }
-      }
-
-      if (!success) {
-        // Fallback: Создаём yt-dlp ссылку для ручного скачивания
-        const fallbackUrl = `https://youtube.com/results?search_query=${encodeURIComponent(extractQuery(url))}`;
-        status.innerHTML = `<span class="error">Все сервера заняты! 😔<br>Попробуй через 5 мин или скачай вручную: <a href="${fallbackUrl}" target="_blank" style="color: #ffcc00;">Поиск в YouTube</a><br>Или напиши @inkv1zator — подниму приватный сервер.</span>`;
+      } catch (e) {
+        s.innerHTML = 'Трек не найден или сервис временно упал<br>Попробуй другую ссылку или через 5 минут';
       }
     }
 
-    function extractId(url) {
-      // Извлекаем ID трека для spotidown
-      return url.split('/').pop().split('?')[0];
-    }
-
-    function extractQuery(url) {
-      // Для fallback: извлекаем название/артиста из URL (упрощённо)
-      if (url.includes('spotify.com/track/')) return 'spotify track ' + extractId(url);
-      if (url.includes('soundcloud.com/')) return url.split('/').slice(-2).join(' ');
-      return 'music ' + url.split('/').pop();
-    }
-
-    // Enter = скачать
-    document.getElementById('urlInput').addEventListener('keypress', e => {
-      if (e.key === 'Enter') downloadNow();
-    });
+    document.getElementById('url').addEventListener('keypress', e => { if (e.key === 'Enter') go(); });
   </script>
 </body>
 </html>
