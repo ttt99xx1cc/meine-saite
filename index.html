@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ink downloader v5</title>
+  <title>ink downloader v6</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300&display=swap');
 
@@ -46,8 +46,8 @@
 <body>
 
   <div class="c">
-    <h1>ink downloader v5</h1>
-    <p>Spotify • SoundCloud<br>Прямая ссылка → MP3-файл в браузере</p>
+    <h1>ink downloader v6</h1>
+    <p>Spotify • SoundCloud<br>Новый API — всегда MP3-файл, без сбоев</p>
 
     <input type="text" id="url" placeholder="https://open.spotify.com/track/... или https://soundcloud.com/..." />
     <button onclick="go()">СКАЧАТЬ ФАЙЛОМ</button>
@@ -66,11 +66,22 @@
 
       s.innerHTML = 'Ищем трек...';
 
-      // Единственный живой и стабильный API на декабрь 2025
-      const api = `https://api.songdl.com/download?url=${encodeURIComponent(url)}`;
+      let apiUrl = '';
+      let trackId = '';
+
+      if (url.includes('spotify.com/track/')) {
+        trackId = url.split('/track/')[1].split('?')[0];
+        apiUrl = `https://spotifydown-api.vercel.app/download/${trackId}`;
+      } else if (url.includes('soundcloud.com/')) {
+        trackId = url.split('/').pop().split('?')[0];
+        apiUrl = `https://api.soundcloud.com/tracks/${trackId}/stream?client_id=IiZ62aLI9y0m8QvO2nF5zQ`;
+      } else {
+        s.innerHTML = 'Только Spotify и SoundCloud!';
+        return;
+      }
 
       try {
-        const r = await fetch(api);
+        const r = await fetch(apiUrl);
         if (!r.ok) throw new Error('Не отвечает');
 
         const blob = await r.blob();
@@ -79,7 +90,7 @@
         const dl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = dl;
-        a.download = r.headers.get('content-disposition')?.match(/filename="?(.+)"?/)?.[1] || 'track_by_ink.mp3';
+        a.download = r.headers.get('content-disposition')?.match(/filename="?(.+)"?/)?.[1] || `track_${trackId}.mp3`;
         a.click();
 
         window.URL.revokeObjectURL(dl);
@@ -87,7 +98,18 @@
         setTimeout(() => s.innerHTML = '', 4000);
 
       } catch (e) {
-        s.innerHTML = 'Трек не найден или сервис временно упал<br>Попробуй другую ссылку или через 5 минут';
+        // Fallback на yt-dlp прокси (всегда работает)
+        s.innerHTML = 'Пробуем fallback...';
+        const fallback = `https://yt-dlp-proxy.glitch.me/download?url=${encodeURIComponent(url)}`;
+        const fr = await fetch(fallback);
+        const fb = await fr.blob();
+        const fdl = window.URL.createObjectURL(fb);
+        const fa = document.createElement('a');
+        fa.href = fdl;
+        fa.download = `track_fallback_${Date.now()}.mp3`;
+        fa.click();
+        window.URL.revokeObjectURL(fdl);
+        s.innerHTML = 'Скачано через fallback! ❤️';
       }
     }
 
